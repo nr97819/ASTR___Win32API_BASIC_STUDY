@@ -1,8 +1,10 @@
 
 #include "pch.h"
+
 #include "CKeyMgr.h"
 
-// 반드시 cpp 파일에 전역으로 생성해야 하는 것 주의
+#include "CCore.h"
+
 int g_arrVK[(int)KEY::LAST] =
 {
 	VK_LEFT,
@@ -13,7 +15,7 @@ int g_arrVK[(int)KEY::LAST] =
 	'Y', 'U', 'I', 'O', 'P',
 	'A', 'S', 'D', 'F', 'G',
 	'Z', 'X', 'C', 'V', 'B',
-	VK_MENU, // ALT 키
+	VK_MENU,
 	VK_CONTROL,
 	VK_LSHIFT,
 	VK_SPACE,
@@ -33,45 +35,74 @@ CKeyMgr::~CKeyMgr()
 
 void CKeyMgr::Init()
 {
-	// Key 값/상태 vector 초기화
 	for (int i = 0; i < (int)KEY::LAST; ++i)
 	{
-		// 처음에는 모두 {None, 눌린적 없음} 으로 초기화
 		m_vecKey.push_back(tKeyInfo{ KEY_STATE::NONE, false });
 	}
 }
 
 void CKeyMgr::Update()
 {
-	for (int i = 0; i < (int)KEY::LAST; ++i)
-	{
-		// 해당 키가 [지금] 눌려있다면
-		if (GetAsyncKeyState(g_arrVK[i]) & 0x8000) // 비트 연산으로도 가능
-		{
-			if (m_vecKey[i].ePrevPush)	
-			{	// prev:O, now:O
-				m_vecKey[i].estate = KEY_STATE::HOLD;
-			}
-			else						
-			{	// prev:X, now:O
-				m_vecKey[i].estate = KEY_STATE::TAP;
-			}
+	// 윈도우 포커싱 알아내기
+	HWND hMainWnd = CCore::GetInst()->GetMainHwnd(); // 우리의 메인 윈도우 핸들 값 (지금은 안 씀)
+	HWND hFocusWnd = GetFocus(); // 현재 포커싱된 윈도우 핸들 값 반환
+	// 포커싱된 윈도우가 하나도 없으면 null이 반환된다.
 
-			m_vecKey[i].ePrevPush = true;
-		}
-		// 해당 키가 [지금] 안눌려있다면
-		else
+	// 만약 현재 Main Window가 포커싱 된 상태라면 (강의랑 조금 다른 코드)
+	//if (hMainWnd == hFocusWnd)
+	if (nullptr != hFocusWnd)
+	{
+		for (int i = 0; i < (int)KEY::LAST; ++i)
 		{
-			if (m_vecKey[i].ePrevPush)	
-			{	// prev:O, now:X
+			if (GetAsyncKeyState(g_arrVK[i]) & 0x8000)
+			{
+				if (m_vecKey[i].ePrevPush)
+				{
+					m_vecKey[i].estate = KEY_STATE::HOLD;
+				}
+				else
+				{
+					m_vecKey[i].estate = KEY_STATE::TAP;
+				}
+
+				m_vecKey[i].ePrevPush = true;
+			}
+			else
+			{
+				if (m_vecKey[i].ePrevPush)
+				{
+					m_vecKey[i].estate = KEY_STATE::AWAY;
+				}
+				else
+				{
+					m_vecKey[i].estate = KEY_STATE::NONE;
+				}
+
+				m_vecKey[i].ePrevPush = false;
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < (int)KEY::LAST; ++i)
+		{
+			// 이전 키 상태를 false로 변경 (state를 위해)
+			m_vecKey[i].ePrevPush = false;
+
+			// TAP이나 HOLD 상태인 경우, 프레임 두 번에 걸쳐서 NONE으로 바뀌도록 한 것.
+			if (KEY_STATE::TAP == m_vecKey[i].estate)
+			{
 				m_vecKey[i].estate = KEY_STATE::AWAY;
 			}
-			else						
-			{	// prev:X, now:X
+			else if (KEY_STATE::HOLD == m_vecKey[i].estate)
+			{
+				m_vecKey[i].estate = KEY_STATE::AWAY;
+			}
+			else if (KEY_STATE::AWAY == m_vecKey[i].estate)
+			{
 				m_vecKey[i].estate = KEY_STATE::NONE;
 			}
-
-			m_vecKey[i].ePrevPush = false;
+			// NONE은 그대로 NONE이므로, 별도 코드 X
 		}
 	}
 }

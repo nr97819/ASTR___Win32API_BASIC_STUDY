@@ -56,7 +56,7 @@ void CCore::progress()
 {
 	// Manager Update
 	CTimeMgr::GetInst()->Update();
-	CKeyMgr::GetInst()->Update(); // KeyMgr 역시 매 프레임마다 update하며, 키 눌림 체크
+	CKeyMgr::GetInst()->Update();
 
 	update();
 	render();
@@ -66,23 +66,24 @@ void CCore::update()
 {
 	Vec2 vPos = g_obj.GetPos();
 
-	if (CKeyMgr::GetInst()->GetKeyState(KEY::LEFT) == KEY_STATE::TAP)
+	// state 기능 적용, 및, HOLD 상태로 if 조건 변경 (TAP 이었음)
+	if (CKeyMgr::GetInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD)
 	{
-		vPos.x -= 300.f;
+		vPos.x -= 300.f * CTimeMgr::GetInst()->GetfDT();
 	}
 	/*if (GetAsyncKeyState(VK_LEFT) & 0x8000)
 	{
 		vPos.x -= 300.f * CTimeMgr::GetInst()->GetfDT();
 	}*/
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	if (CKeyMgr::GetInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD)
 	{
 		vPos.x += 300.f * CTimeMgr::GetInst()->GetfDT();
 	}
-	if (GetAsyncKeyState(VK_UP) & 0x8000)
+	if (CKeyMgr::GetInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD)
 	{
 		vPos.y -= 300.f * CTimeMgr::GetInst()->GetfDT();
 	}
-	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+	if (CKeyMgr::GetInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD)
 	{
 		vPos.y += 300.f * CTimeMgr::GetInst()->GetfDT();
 	}
