@@ -12,5 +12,8 @@ public:
 public:
     CPlayer();
     ~CPlayer();
+
+public:
+    void CreateMissile();
 };
 

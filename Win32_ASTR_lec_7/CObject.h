@@ -16,7 +16,7 @@ public:
 public:
 	// 순수가상함수를 만들어서, => 추상클래스로 만듦
 	virtual void Update() = 0; // 자식 객체만의 update가 필요
-	void Render(HDC _dc);
+	virtual void Render(HDC _dc);
 
 public:
 	CObject();
