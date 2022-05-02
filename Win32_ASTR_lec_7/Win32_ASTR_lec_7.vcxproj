@@ -24,7 +24,7 @@
     <ProjectGuid>{b45c897a-db0d-4cd0-be53-3073eeffc872}</ProjectGuid>
     <RootNamespace>Win32ASTRlec7</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Win32_ASTR_lec_15-16</ProjectName>
+    <ProjectName>Win32_ASTR_lec_19</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

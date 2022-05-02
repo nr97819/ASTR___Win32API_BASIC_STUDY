@@ -5,16 +5,11 @@ class CMissile :
 	public CObject
 {
 private:
-	float		m_fDir;
+	//float		m_fDir;
+	float		m_fTheta; // 이동 방향(각도)
 
 public:
-	void SetDir(bool _bUp)
-	{
-		if (_bUp)
-			m_fDir = -1.f;
-		else
-			m_fDir = 1.f;
-	}
+	void SetDir(float _fTheta) { m_fTheta = _fTheta; } // 이동 방향(각도)
 
 public:
 	virtual void Update() override;

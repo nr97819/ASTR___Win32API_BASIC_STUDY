@@ -12,7 +12,6 @@ CSceneMgr::CSceneMgr()
 
 CSceneMgr::~CSceneMgr()
 {
-	// Scene 전부 삭제 (자식들)
 	for (UINT i = 0; i < (UINT)SCENE_TYPE::END; ++i)
 	{
 		if (nullptr != m_arrScene[i])
@@ -24,7 +23,6 @@ CSceneMgr::~CSceneMgr()
 
 void CSceneMgr::Init()
 {
-	// Scene 생성
 	m_arrScene[(UINT)SCENE_TYPE::START] = new CScene_Start();
 	m_arrScene[(UINT)SCENE_TYPE::START]->SetName(L"Start Scene");
 	// m_arrScene[(UINT)SCENE_TYPE::TOOL] = new CScene_Tool();
@@ -32,7 +30,6 @@ void CSceneMgr::Init()
 	// m_arrScene[(UINT)SCENE_TYPE::STAGE_02] = new CScene_Stage_02();
 	// m_arrScene[(UINT)SCENE_TYPE::STAGE_03] = new CScene_Stage_03();
 	
-	// 현재 씬 지정
 	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::START];
 	m_pCurScene->Enter();
 }

@@ -5,10 +5,10 @@ class CMonster :
     public CObject
 {
 private:
-    Vec2        m_vCenterPos; // 움직일 기준점(중심)
+    Vec2        m_vCenterPos;
     float       m_fSpeed;
     float       m_fMaxDistance;
-    int         m_iDir; // 진행 방향 (우: 1, 좌: -1)
+    int         m_iDir;
 
 public:
     float GetSpeed() { return m_fSpeed; }
