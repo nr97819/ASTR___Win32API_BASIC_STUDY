@@ -6,6 +6,24 @@ struct Vec2
 	float y;
 
 public:
+	float Length()
+	{
+		return sqrt(x * x + y * y);
+	}
+
+	Vec2& Normalize()
+	{
+		float fLen = Length();
+
+		assert(fLen != 0.f); // 0.f가 아니라면, assert가 trigger된다.
+
+		x /= fLen;
+		y /= fLen;
+
+		return *this;
+	}
+
+public:
 	Vec2& operator=(const POINT _pt)
 	{
 		x = (float)_pt.x;
